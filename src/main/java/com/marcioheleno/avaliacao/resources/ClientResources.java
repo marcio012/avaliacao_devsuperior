@@ -50,4 +50,10 @@ public class ClientResources {
 
         return ResponseEntity.created(uri).body(clientDto);
     }
+
+    @PutMapping(value = "/{id}")
+    public ResponseEntity<ClientDto> update(@PathVariable Long id, @RequestBody ClientDto clientDto) {
+        clientDto = clientServices.update(id, clientDto);
+        return ResponseEntity.ok().body(clientDto);
+    }
 }

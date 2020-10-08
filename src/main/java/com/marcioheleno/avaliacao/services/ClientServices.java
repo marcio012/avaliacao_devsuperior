@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.ResourceAccessException;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.Optional;
 
 @Service
@@ -47,5 +48,17 @@ public class ClientServices {
         clientEntity.setIncome(clientDto.getIncome());
         clientEntity.setBirthDate(clientDto.getBirthDate());
         clientEntity.setChildren(clientDto.getChildren());
+    }
+
+    @Transactional
+    public ClientDto update(Long id, ClientDto clientDto) {
+        try {
+            Client clientEntity = clientRepository.getOne(id);
+            convertClientToClientDto(clientDto, clientEntity);
+            clientEntity = clientRepository.save(clientEntity);
+            return new ClientDto(clientEntity);
+        } catch (EntityNotFoundException e) {
+            throw new ResourceNotFoundException("Id not found " + id);
+        }
     }
 }
